@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## IBINOVIRP Site — FastAPI + PostgreSQL (Render)
 
-## Getting Started
+Projeto web em Python com FastAPI, HTML (Jinja2) e PostgreSQL. Inclui área administrativa simples (CRUDs) protegida por Basic Auth e migrações com Alembic.
 
-First, run the development server:
+### Estrutura
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- `app/main.py`: rotas públicas e administrativas
+- `app/models.py`: modelos SQLAlchemy
+- `app/database.py`: conexão com `DATABASE_URL`
+- `app/auth.py`: Basic Auth (`ADMIN_USER`/`ADMIN_PASS`)
+- `app/templates/`: templates Jinja2 (públicos e admin)
+- `alembic/`: configuração do Alembic e migrations
+- `render.yaml`: blueprint para Render (Python)
+- `requirements.txt`: dependências do projeto
+
+### Variáveis de ambiente
+- `DATABASE_URL`: string de conexão PostgreSQL
+- `ADMIN_USER`: usuário do painel admin
+- `ADMIN_PASS`: senha do painel admin
+
+Exemplo local (PowerShell):
+```powershell
+setx DATABASE_URL "postgresql://postgres:postgres@localhost:5432/ibinovirp"
+setx ADMIN_USER "admin"
+setx ADMIN_PASS "senha"
+# reinicie o terminal após setx
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Setup local
+```bash
+python -m venv .venv
+# Windows (PowerShell)
+. .venv/Scripts/activate
+pip install -r requirements.txt
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Primeiro aplique as migrations (após configurar DATABASE_URL):
+alembic upgrade head
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Rodar o servidor
+uvicorn app.main:app --reload
+```
+Acesse:
+- Home: http://localhost:8000/
+- Admin: http://localhost:8000/admin/ministerios | /admin/eventos | /admin/mensagens
+- Config: http://localhost:8000/config
 
-## Learn More
+### Alembic (Migrações)
+Gerar uma nova migration após alterar `app/models.py`:
+```bash
+alembic revision --autogenerate -m "description"
+```
+Aplicar migrations:
+```bash
+alembic upgrade head
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Deploy na Render
+- Este repo está pronto para Web Service Python via `render.yaml`:
+  - `runtime: python`
+  - `buildCommand: pip install -r requirements.txt`
+  - `startCommand: alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+- Configure as envs no serviço:
+  - `DATABASE_URL` (da instância PostgreSQL Render)
+  - `ADMIN_USER`
+  - `ADMIN_PASS`
+- O deploy aplicará migrations automaticamente no start.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Rotas Principais
+- Público:
+  - `GET /` — Home com destaques
+- Admin (Basic Auth):
+  - Ministérios: `GET /admin/ministerios`, `GET/POST /admin/ministerios/novo`, `GET/POST /admin/ministerios/editar/{id}`, `POST /admin/ministerios/excluir/{id}`
+  - Eventos: `GET /admin/eventos`, `GET/POST /admin/eventos/novo`, `GET/POST /admin/eventos/editar/{id}`, `POST /admin/eventos/excluir/{id}`
+  - Mensagens: `GET /admin/mensagens`, `GET/POST /admin/mensagens/novo`, `GET/POST /admin/mensagens/editar/{id}`, `POST /admin/mensagens/excluir/{id}`
+  - Configuração do Site: `GET/POST /config`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Notas
+- Layout base em `app/templates/base.html`.
+- Para uploads e mídias, integrar serviço de storage (ex.: S3) e criar endpoints apropriados.
