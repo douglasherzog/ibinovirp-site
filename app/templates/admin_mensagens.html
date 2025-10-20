@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Mensagens</title>
+  <style>body{font-family:system-ui;margin:2rem} a{color:#0ea5e9} table{border-collapse:collapse;width:100%} td,th{border:1px solid #ddd;padding:.5rem}</style>
+</head>
+<body>
+  <h1>Mensagens</h1>
+  <p><a href="/">← Home</a> | <a href="/admin/mensagens/novo">Nova</a></p>
+  {% if items and items|length %}
+  <table>
+    <thead><tr><th>ID</th><th>Título</th><th>Pregador</th><th>Data</th><th>Ações</th></tr></thead>
+    <tbody>
+      {% for s in items %}
+      <tr>
+        <td>{{ s.id }}</td>
+        <td>{{ s.titulo }}</td>
+        <td>{{ s.pregador or '' }}</td>
+        <td>{{ s.data or '' }}</td>
+        <td>
+          <a href="/admin/mensagens/editar/{{ s.id }}">Editar</a>
+          <form method="post" action="/admin/mensagens/excluir/{{ s.id }}" style="display:inline" onsubmit="return confirm('Excluir?');">
+            <button type="submit">Excluir</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p>Nenhuma mensagem cadastrada.</p>
+  {% endif %}
+</body>
+</html>

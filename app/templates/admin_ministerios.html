@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Ministérios{% endblock %}
+{% block content %}
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+      <h1 style="margin:0">Ministérios</h1>
+      <a class="btn" href="/admin/ministerios/novo">Novo</a>
+    </div>
+    {% if items and items|length %}
+    <table style="margin-top:12px">
+      <thead><tr><th>ID</th><th>Título</th><th style="width:160px">Ações</th></tr></thead>
+      <tbody>
+        {% for m in items %}
+        <tr>
+          <td>{{ m.id }}</td>
+          <td>{{ m.titulo }}</td>
+          <td>
+            <a class="btn" href="/admin/ministerios/editar/{{ m.id }}">Editar</a>
+            <form method="post" action="/admin/ministerios/excluir/{{ m.id }}" style="display:inline" onsubmit="return confirm('Excluir?');">
+              <button class="btn btn-danger" type="submit">Excluir</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="subtitle" style="margin-top:8px">Nenhum ministério cadastrado.</p>
+    {% endif %}
+  </div>
+{% endblock %}

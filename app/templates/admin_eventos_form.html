@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ 'Editar Evento' if item else 'Novo Evento' }}</title>
+  <style>body{font-family:system-ui;margin:2rem} label{display:block;margin:.5rem 0 .25rem} input,textarea{width:100%;padding:.5rem;border:1px solid #ccc;border-radius:6px}</style>
+</head>
+<body>
+  <h1>{{ 'Editar Evento' if item else 'Novo Evento' }}</h1>
+  <p><a href="/admin/eventos">← Voltar</a></p>
+  <form method="post" action="{{ '/admin/eventos/editar/' ~ item.id if item else '/admin/eventos/novo' }}">
+    <label>Título</label>
+    <input name="titulo" value="{{ item.titulo if item else '' }}" />
+
+    <label>Descrição</label>
+    <textarea name="descricao" rows="4">{{ item.descricao if item else '' }}</textarea>
+
+    <label>Local</label>
+    <input name="local" value="{{ item.local if item else '' }}" />
+
+    <label>Início (texto livre ou ISO)</label>
+    <input name="inicio" value="{{ item.inicio if item else '' }}" />
+
+    <label>Fim (texto livre ou ISO)</label>
+    <input name="fim" value="{{ item.fim if item else '' }}" />
+
+    <p style="margin-top:1rem"><button type="submit">Salvar</button></p>
+  </form>
+</body>
+</html>

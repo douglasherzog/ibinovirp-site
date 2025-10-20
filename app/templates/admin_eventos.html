@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Eventos{% endblock %}
+{% block content %}
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+      <h1 style="margin:0">Eventos</h1>
+      <a class="btn" href="/admin/eventos/novo">Novo</a>
+    </div>
+    {% if items and items|length %}
+    <table style="margin-top:12px">
+      <thead><tr><th>ID</th><th>Título</th><th>Início</th><th>Fim</th><th style="width:160px">Ações</th></tr></thead>
+      <tbody>
+        {% for e in items %}
+        <tr>
+          <td>{{ e.id }}</td>
+          <td>{{ e.titulo }}</td>
+          <td>{{ e.inicio or '' }}</td>
+          <td>{{ e.fim or '' }}</td>
+          <td>
+            <a class="btn" href="/admin/eventos/editar/{{ e.id }}">Editar</a>
+            <form method="post" action="/admin/eventos/excluir/{{ e.id }}" style="display:inline" onsubmit="return confirm('Excluir?');">
+              <button class="btn btn-danger" type="submit">Excluir</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="subtitle" style="margin-top:8px">Nenhum evento cadastrado.</p>
+    {% endif %}
+  </div>
+{% endblock %}
