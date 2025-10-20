@@ -1,23 +1,13 @@
 services:
   - type: web
     name: ibinovirp-site
-    env: node
-    nodeVersion: 20
+    runtime: python
     plan: free
+    repo: https://github.com/douglasherzog/ibinovirp-site
     branch: main
     autoDeploy: true
-    buildCommand: npm install && npm run build
-    startCommand: npm run start
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
-      # Defina estes valores no dashboard da Render (sync: false = gerenciadas lá)
-      - key: NEXT_PUBLIC_SANITY_PROJECT_ID
-        sync: false
-      - key: NEXT_PUBLIC_SANITY_DATASET
-        value: production
-      - key: NEXT_TELEMETRY_DISABLED
-        value: "1"
-      # Credenciais para proteger /admin em produção (middleware)
-      - key: BASIC_AUTH_USER
-        sync: false
-      - key: BASIC_AUTH_PASS
+      - key: DATABASE_URL
         sync: false

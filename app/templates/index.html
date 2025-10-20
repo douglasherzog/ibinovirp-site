@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ site.nome_igreja or 'IBINOVIRP' }}</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; margin: 2rem; }
+    h1, h2 { margin: 0 0 .5rem; }
+    section { margin: 1.75rem 0; }
+    ul { margin: .5rem 0 0 1.25rem; }
+    .muted { color: #666; }
+    a { color: #0ea5e9; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>{{ site.nome_igreja or 'IBINOVIRP' }}</h1>
+    {% if site.descricao_breve %}
+      <p class="muted">{{ site.descricao_breve }}</p>
+    {% endif %}
+    <p><a href="/config">Configurações</a></p>
+  </header>
+
+  <section>
+    <h2>Próximos eventos</h2>
+    {% if eventos and eventos|length %}
+    <ul>
+      {% for e in eventos %}
+        <li>{{ e.titulo }}</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p class="muted">Nenhum evento cadastrado.</p>
+    {% endif %}
+  </section>
+
+  <section>
+    <h2>Ministérios</h2>
+    {% if ministerios and ministerios|length %}
+    <ul>
+      {% for m in ministerios %}
+        <li>{{ m.titulo }}</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p class="muted">Nenhum ministério cadastrado.</p>
+    {% endif %}
+  </section>
+
+  <section>
+    <h2>Mensagens/Sermões</h2>
+    {% if mensagens and mensagens|length %}
+    <ul>
+      {% for s in mensagens %}
+        <li>{{ s.titulo }}{% if s.pregador %} — {{ s.pregador }}{% endif %}</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p class="muted">Nenhuma mensagem cadastrada.</p>
+    {% endif %}
+  </section>
+</body>
+</html>
