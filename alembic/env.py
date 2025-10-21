@@ -19,6 +19,15 @@ if config.config_file_name is not None:
 if os.getenv("DATABASE_URL"):
     config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
 
+# Normalize URL to ensure psycopg3 driver is used during migrations
+_url = config.get_main_option("sqlalchemy.url")
+if _url:
+    if _url.startswith("postgres://"):
+        _url = _url.replace("postgres://", "postgresql://", 1)
+    if _url.startswith("postgresql://") and "+" not in _url:
+        _url = _url.replace("postgresql://", "postgresql+psycopg://", 1)
+    config.set_main_option("sqlalchemy.url", _url)
+
 # Ensure project root is on sys.path (works on Render: /opt/render/project/src)
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
