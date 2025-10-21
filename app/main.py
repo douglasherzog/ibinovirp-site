@@ -10,7 +10,7 @@ from .auth import require_basic_auth
 # Create tables if not exist
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="IBINOVIRP Site (Python)")
+app = FastAPI(title="Igreja Batista Independente Nova Vida - Rio Pardo - RS")
 
 # Templates
 templates_env = Environment(

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}{{ site.nome_igreja or 'IBINOVIRP' }}{% endblock %}
+{% block title %}{{ site.nome_igreja or 'Igreja Batista Independente Nova Vida - Rio Pardo - RS' }}{% endblock %}
 {% block content %}
   <div class="grid cols-2">
     <div class="card">
-      <h2 style="margin:0 0 8px">{{ site.nome_igreja or 'IBINOVIRP' }}</h2>
+      <h2 style="margin:0 0 8px">{{ site.nome_igreja or 'Igreja Batista Independente Nova Vida - Rio Pardo - RS' }}</h2>
       {% if site.descricao_breve %}
         <p class="subtitle">{{ site.descricao_breve }}</p>
       {% else %}
