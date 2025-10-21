@@ -53,8 +53,15 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
+    # Use the normalized sqlalchemy.url explicitly to avoid wrong driver resolution
+    url = config.get_main_option("sqlalchemy.url")
+    section = config.get_section(config.config_ini_section, {})
+    if section is None:
+        section = {}
+    section["sqlalchemy.url"] = url
+
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
+        section,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
